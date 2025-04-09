@@ -1,8 +1,13 @@
 package controller;
 
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
+import DataBase.GestionBD;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -52,9 +57,29 @@ public class VentanaInicioController implements Initializable {
     @FXML
     void btnEntrar(ActionEvent event) {
     	//Para entrar lo primero es obtener la información introducida por el usuario
-    	String alumnoIngresado =tfUsuario.getText();
+    	String nombre =tfUsuario.getText();
     	String contraseña=pfContraseña.getText();
     	String cargo = (String) cbCargo.getSelectionModel().getSelectedItem();
+    	boolean permitido= false;
+    	
+    	if(cargo.equals("alumno")) {
+    		
+    		try {
+    			GestionBD gbd = new GestionBD();
+				ResultSet rs =gbd.buscarAlumno(nombre, contraseña);
+				if(rs != null && rs.next() ){
+					//Si encontramos el alumno obtenemos su dni
+					ResultSet rsDni =gbd.obtenerDniPorNombre(nombre);
+					String dni = rsDni.getString("dni_alumno");//Guardo esto para mostrarlo en la ventana del alumno
+					System.out.print("El alumno permitido es" + dni);
+				}else {
+					System.out.println("Usuario o contraseña incorrectos");
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
 
     }
 
@@ -72,6 +97,15 @@ public class VentanaInicioController implements Initializable {
     	Stage stage = (Stage) btnSalir.getScene().getWindow();
     	stage.close();
     	
+    	
+    }
+    
+    private void mostrarAlerta(String titulo, String mensaje, AlertType tipo) {
+    	Alert alert = new Alert(tipo);
+    	alert.setTitle(titulo);
+    	alert.setHeaderText(null);
+    	alert.setContentText(mensaje);
+    	alert.showAndWait();
     	
     }
     private static final String ALUMNO ="carla";
