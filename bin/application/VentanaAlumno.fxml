@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.VentanaAlumnoController">
+   <children>
+      <Label fx:id="lbModulos" layoutX="119.0" layoutY="83.0" text="Módulos" />
+      <ComboBox fx:id="cbModulos" layoutX="291.0" layoutY="79.0" onAction="#mostrarNota" prefWidth="150.0" />
+      <Label fx:id="lbNota" layoutX="119.0" layoutY="154.0" text="Nota" />
+      <TextField fx:id="tfNota" editable="false" layoutX="291.0" layoutY="150.0" />
+      <Button fx:id="btnSalir" layoutX="265.0" layoutY="272.0" mnemonicParsing="false" onAction="#salir" text="Salir" />
+   </children>
+</AnchorPane>

@@ -28,7 +28,17 @@ public class GestionBD {
 	
 	
 	
-	
+	public ResultSet obtenerAsignaturasDeAlumno(String dniAlumno) throws SQLException {
+		con= conexion.getConexion();
+		String query= 	"SELECT a.id_asignatura, asig.denominacion FROM matriculas a " +
+						"JOIN asignaturas asig ON a.id_asignatura = asig.id_asignatura " +
+						"WHERE a.dni_alumno = '" + dniAlumno +"'";
+		st= (Statement) con.createStatement();
+		
+		
+		
+		return st.executeQuery(query);
+	}
 	
 	public ResultSet mostrarNotasAlumno(String dniAlumno) throws SQLException {
 		con= conexion.getConexion();
@@ -117,7 +127,7 @@ public class GestionBD {
 	    return "N" + dniAlumno + idAsignatura + System.currentTimeMillis();
 	}
 
-	public boolean ponerNota(String dniAlumno, String idAsignatura, String nota) throws SQLException {
+	public boolean ponerNota(String idNota,String dniAlumno, String idAsignatura, String nota) throws SQLException {
 	    boolean insertado = false;
 	    con = conexion.getConexion(); 
 	    try {
@@ -143,7 +153,7 @@ public class GestionBD {
 	        }
 	    }else {
             
-            String idNota = generarIdNota(dniAlumno, idAsignatura);
+            idNota = generarIdNota(dniAlumno, idAsignatura);
 
           
             String guardar = "INSERT INTO notas (id_nota, dni, id_asignatura, calificacion) VALUES ('" + idNota + "', '" + dniAlumno + "', '" + idAsignatura + "', '" + nota + "')";
@@ -166,17 +176,29 @@ public class GestionBD {
 	    return insertado; 
 	}
 
-	
-
-
-	public ResultSet obtenerDniPorNombre(String nombreCompleto) throws SQLException {
-	    con = conexion.getConexion();
-	    
-	    String query = "SELECT dni_alumno FROM alumnos WHERE CONCAT(nombre, ' ', apellidos) = '" + nombreCompleto + "' LIMIT 1";
-
-	    st = (Statement) con.createStatement();
-	    return st.executeQuery(query);
+	public ResultSet obtenerDniNombreCompleto(String nombre, String apellidos) throws SQLException {
+		con= conexion.getConexion();
+		String query= "SELECT dni_alumno FROM alumnos WHERE nombre = '" + nombre + "' AND apellidos = '" + apellidos + "' LIMIT 1";
+		st= (Statement) con.createStatement();
+		return st.executeQuery(query);
+		
+		
+		
 	}
+
+
+	public ResultSet obtenerDniPorNombre(String nombre, String password) {
+	    try {
+	        con = conexion.getConexion();
+	        String query = "SELECT dni_alumno FROM alumnos WHERE nombre = '" + nombre + "' AND pass = '" + password + "' LIMIT 1";
+	        st = (Statement) con.createStatement();
+	        return st.executeQuery(query);
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return null;
+	}
+
 
 	public ResultSet buscarAlumno(String nombre, String password) throws SQLException {
 	    con = conexion.getConexion();
