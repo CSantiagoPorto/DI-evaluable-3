@@ -56,6 +56,8 @@ public class VentanaProfesorController {
     void SeleccionarAlumno(ActionEvent event) {
     	String modulo=cbModulos.getValue();
     	String alumno= cbSeleccionarAlumno.getValue();//guardamos el alumno
+    	if(alumno==null || modulo == null) {return;}
+    	tfNota.clear();
     	String[]partes= alumno.split(" ");
     	String nombre= partes[0];
     	String apellido=partes[1];
