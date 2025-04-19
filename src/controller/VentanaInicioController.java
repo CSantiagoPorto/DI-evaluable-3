@@ -24,6 +24,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class VentanaInicioController implements Initializable {
+	
 
     @FXML
     private Button btnEntrar;
@@ -78,11 +79,12 @@ public class VentanaInicioController implements Initializable {
 				ResultSet rs =gbd.buscarAlumno(nombre, contraseña);
 				if(rs != null && rs.next() ){
 					//Si encontramos el alumno obtenemos su dni
+					
 					ResultSet rsDni = gbd.obtenerDniPorNombre(nombre, contraseña);
 					String dni = "";
 					if (rsDni != null && rsDni.next()) {
 					    dni = rsDni.getString("dni_alumno"); 
-					    System.out.println("El alumno permitido es " + dni);
+					    mostrarAlerta("Bienvenido "+nombre,"Te has logeado con éxito" ,AlertType.CONFIRMATION);
 					} else {
 					    mostrarAlerta("Error de acceso", "No se encuentra el dni.", AlertType.ERROR);
 					    return;
@@ -93,6 +95,8 @@ public class VentanaInicioController implements Initializable {
 					Parent root =loader.load();
 					VentanaAlumnoController controlador = loader.getController();
 					controlador.ColocarDniAlumno(dni); //Tengo que pasarle el dni del alumno a la otra ventana
+					controlador.colocarNombreAlumno(tfUsuario.getText());
+
 					controlador.cargarModulos();//Lo módulos para ese dni
 					
 					Stage stage= new Stage(); //Tengo que crear la nueva ventana
@@ -119,15 +123,14 @@ public class VentanaInicioController implements Initializable {
     		
     		try {
     			GestionBD gbd =new GestionBD();
-				ResultSet rs=gbd.buscarProfesor(nombre, contraseña);
+				ResultSet dniProfesor=gbd.buscarProfesor(nombre, contraseña);
 				String dni ="";
-				if(rs!=null && rs.next()) {
-					ResultSet dniProfesor= gbd.buscarProfesor(nombre, contraseña);
-					
+									
 					if(dniProfesor !=null && dniProfesor.next()) {
 						dni= dniProfesor.getString("dni_profesor");
-						System.out.println("El profesor encontrado es: "+ dniProfesor.getString("nombre")+ dniProfesor.getString("apellidos")+ " con dni: "+ dni);
+						//System.out.println("El profesor encontrado es: "+ dniProfesor.getString("nombre")+ dniProfesor.getString("apellidos")+ " con dni: "+ dni);
 						//Prepara la ventana
+						mostrarAlerta("Validación exitosa", "Bienvenido "+ nombre, AlertType.CONFIRMATION);
 						FXMLLoader loader= new FXMLLoader(getClass().getResource("/application/VentanaProfesor.fxml"));
 						Parent root=loader.load();//Construye los componentes
 						VentanaProfesorController controllerP= loader.getController();
@@ -147,7 +150,7 @@ public class VentanaInicioController implements Initializable {
 						logeo.close();
 					}else {mostrarAlerta("Error de acceso", "Nombre o contraseña incorrectos.", AlertType.ERROR);}
 
-				}
+				
 				
 				
 				
@@ -169,15 +172,10 @@ public class VentanaInicioController implements Initializable {
 
     @FXML
     void btnSalir(ActionEvent event) {
-    	btnSalir.setOnAction(e->closeApplication());
+        Stage stage = (Stage) btnSalir.getScene().getWindow();
+        stage.close();
+    }
 
-    }
-    private void closeApplication() {//Este método cierra la app
-    	Stage stage = (Stage) btnSalir.getScene().getWindow();
-    	stage.close();
-    	
-    	
-    }
     
     private void mostrarAlerta(String titulo, String mensaje, AlertType tipo) {
     	Alert alert = new Alert(tipo);

@@ -7,20 +7,19 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.VentanaProfesorController">
    <children>
-      <Button fx:id="btnSalir" layoutX="167.0" layoutY="318.0" mnemonicParsing="false" onAction="#salir" prefHeight="26.0" prefWidth="59.0" text="Salir" />
-      <Button fx:id="btnGuardar" layoutX="335.0" layoutY="318.0" mnemonicParsing="false" onAction="#guardarNota" text="Guardar" />
+      <Button fx:id="btnSalir" layoutX="406.0" layoutY="316.0" mnemonicParsing="false" onAction="#salir" prefHeight="26.0" prefWidth="59.0" text="Salir" />
+      <Button fx:id="btnGuardar" layoutX="143.0" layoutY="317.0" mnemonicParsing="false" onAction="#guardarNota" text="Guardar" />
       <Label fx:id="lbModulos" layoutX="77.0" layoutY="99.0" text="Módulos" />
-      <ComboBox fx:id="cbModulos" layoutX="290.0" layoutY="95.0" onAction="#seleccionarModulo" prefWidth="150.0" />
+      <ComboBox fx:id="cbModulos" layoutX="290.0" layoutY="95.0" onAction="#seleccionarModulo" prefWidth="200.0" />
       <Label layoutX="77.0" layoutY="167.0" text="Alumno" />
-      <ComboBox fx:id="cbSeleccionarAlumno" layoutX="290.0" layoutY="163.0" onAction="#SeleccionarAlumno" prefWidth="150.0" />
+      <ComboBox fx:id="cbSeleccionarAlumno" layoutX="290.0" layoutY="163.0" onAction="#SeleccionarAlumno" prefWidth="200.0" />
       <Label fx:id="lbNota" layoutX="77.0" layoutY="235.0" text="Nota del alumno" />
-      <TextField fx:id="tfNota" layoutX="291.0" layoutY="222.0" onAction="#tfNota" />
-      <Label fx:id="lbCabecera" alignment="CENTER" layoutX="4.0" layoutY="14.0" prefHeight="58.0" prefWidth="600.0" text="Ventana del profesor">
+      <TextField fx:id="tfNota" layoutX="291.0" layoutY="222.0" minWidth="200.0" />
+      <Label fx:id="lbCabecera" alignment="CENTER" layoutX="4.0" layoutY="-2.0" prefHeight="74.0" prefWidth="600.0" text="Gestión de notas">
          <font>
-            <Font size="22.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
       </Label>
    </children>

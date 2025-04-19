@@ -14,8 +14,7 @@ public class Main extends Application {
 		try {
 			//BorderPane root = new BorderPane(); Ya no necesito crear el BorderpPane a mano
 			FXMLLoader loader= new FXMLLoader();
-			//Scene scene = new Scene(root,400,400);
-			//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			
 			loader.setLocation(Main.class.getResource("VentanaInicio.fxml"));//carga el xml y lo convierte en un objeto
 			//Esto le da la ubicación
 			AnchorPane ventana= loader.load();//Crea la escena con ventana

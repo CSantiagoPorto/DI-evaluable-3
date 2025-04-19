@@ -8,15 +8,15 @@ import java.util.ResourceBundle;
 import DataBase.GestionBD;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class VentanaAlumnoController implements Initializable{
+public class VentanaAlumnoController {
 	private String dniAlumno;
+	private String nombreCompletoAlumno;
 
     @FXML
     private Button btnSalir;
@@ -32,6 +32,30 @@ public class VentanaAlumnoController implements Initializable{
 
     @FXML
     private TextField tfNota;
+    @FXML
+    private Label lbCabecera;
+    
+    
+    public void cargarModulos() {
+		// Este método carga todos los módulos en los que está matriculado el alumno
+
+		try {
+			GestionBD gbd =new GestionBD();
+			ResultSet rs= gbd.obtenerAsignaturasDeAlumno(dniAlumno) ;
+			while(rs.next()) {
+				cbModulos.getItems().add(rs.getString("denominacion"));
+			}
+			cbModulos.setOnAction(event -> mostrarNota(event));//Evento al cambiar la selección
+			//Al cambiar la selección del módulo cambia la nota
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	public void colocarNombreAlumno(String nombre) {
+	    lbCabecera.setText("Consultar notas. Alumno: " + nombre);
+	}
+    
 
     @FXML
     void mostrarNota(ActionEvent event) {
@@ -45,7 +69,7 @@ public class VentanaAlumnoController implements Initializable{
 				if(rs.next()) {
 					tfNota.setText(rs.getString("calificacion"));//Le coloco la nota que en mi base de datos está en la columna calificación
 				}else {
-					tfNota.setText("Pendiente de calificación");
+					tfNota.setText("");
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -61,30 +85,8 @@ public class VentanaAlumnoController implements Initializable{
 
     }
 
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		cbModulos.setOnAction(event -> mostrarNota(event));//Evento al cambiar la selección
-
-		
-	}
 	public void ColocarDniAlumno(String dni) {//Este método me hace falta para pasarle el dni desde la otra clase
 		this.dniAlumno=dni;
 	}
-	public void cargarModulos() {
-		// Este método carga todos los módulos en los que está matriculado el alumno
-
-		
-		try {
-			GestionBD gbd =new GestionBD();
-			ResultSet rs= gbd.obtenerAsignaturasDeAlumno(dniAlumno) ;
-			while(rs.next()) {
-				cbModulos.getItems().add(rs.getString("denominacion"));
-			}
-		} catch (SQLException e) {
-			
-			e.printStackTrace();
-		}
-		
-	}
-
+	
 }

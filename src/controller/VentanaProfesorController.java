@@ -51,6 +51,47 @@ public class VentanaProfesorController {
 		this.dniProfesor= dni;
 		//Con esto guardaré el dni del profesor como variable de clase
 	}
+	 public void cargarModulosProfe() {
+	    	GestionBD gbd = new GestionBD();
+	    	try {
+				ResultSet rs= gbd.modulosProfesor(dniProfesor);
+				while(rs.next()) {
+					cbModulos.getItems().add(rs.getString("denominacion"));
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	
+	    }
+	    @FXML
+	    void seleccionarModulo(ActionEvent event) {
+	    	cbSeleccionarAlumno.getItems().clear();//Necesito que se limpie para que no se queden los alumnos
+	    	//de otras asignaturas
+	    	
+	    	try {
+	    		String modulo=cbModulos.getValue(); //Guardamos en un String el valor elegido
+	        	GestionBD gbd= new GestionBD();
+	        	//Tengo el nombre de la asignatura, entonces a partir de eso necesito obtener su id
+	        	String idAsig= gbd.obtenerIdAsignaturaPorNombre(modulo);
+	        	//Ya tengo el id de la asignatura. Ahora necesito obtener los alumnos matriculados en esa asignatura.
+	        	//Ese es el valor que tengo que pasarle al siguiente cb, por tanto necesito un ResultSet
+				ResultSet rs= gbd.obtenerAlumnoAsignatura(idAsig);
+				//Ahora ya tengo en mi variable el acceso a los alumnos. Ahora es ir recorriendo la bd
+				//y añadiéndolo a nuestro combobox
+				while(rs.next()) {
+					String nombreAlumno =rs.getString("nombre")+" "+ rs.getString("apellidos");
+					cbSeleccionarAlumno.getItems().add(nombreAlumno);
+					//Recorremos con next mientras haya registros. Guardamos en el String el nombre + apellidos
+					//obtenemos los items y añadimos en el cb de los alumnos
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	
+
+	    }
 
     @FXML
     void SeleccionarAlumno(ActionEvent event) {
@@ -102,6 +143,10 @@ public class VentanaProfesorController {
 				String idNota=gbd.generarIdNota(dni, idAsig);
 				double notaNueva;
 				notaNueva= Double.parseDouble(nota);
+				if(notaNueva <0 || notaNueva >10) {
+					mostrarAlerta("Valor no válido", "La nota debe ser un número entre el 1 y el 10", AlertType.WARNING);
+					return;
+				}
 				boolean guardado= gbd.ponerNota(idNota,dni, idAsig, nota);
 				if(guardado) {
 					mostrarAlerta("Nota guardada correctamente","Proceso completado con éxtio", AlertType.INFORMATION);
@@ -116,10 +161,15 @@ public class VentanaProfesorController {
 				return;
 			}
 			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			mostrarAlerta("Nota no válida", "No se ha introducido un número", AlertType.ERROR);	
+			  
+		}catch(SQLException e) {
+			mostrarAlerta("Error de base de datos", "Ha ocurrido un problema al guardar en la base de datos.", AlertType.ERROR);		
 		}
+    	
+    	
+    	
 
     }
 
@@ -129,52 +179,9 @@ public class VentanaProfesorController {
 
     }
 
-    @FXML
-    void seleccionarModulo(ActionEvent event) {
-    	cbSeleccionarAlumno.getItems().clear();//Necesito que se limpie para que no se queden los alumnos
-    	//de otras asignaturas
-    	
-    	try {
-    		String modulo=cbModulos.getValue(); //Guardamos en un String el valor elegido
-        	GestionBD gbd= new GestionBD();
-        	//Tengo el nombre de la asignatura, entonces a partir de eso necesito obtener su id
-        	String idAsig= gbd.obtenerIdAsignaturaPorNombre(modulo);
-        	//Ya tengo el id de la asignatura. Ahora necesito obtener los alumnos matriculados en esa asignatura.
-        	//Ese es el valor que tengo que pasarle al siguiente cb, por tanto necesito un ResultSet
-			ResultSet rs= gbd.obtenerAlumnoAsignatura(idAsig);
-			//Ahora ya tengo en mi variable el acceso a los alumnos. Ahora es ir recorriendo la bd
-			//y añadiéndolo a nuestro combobox
-			while(rs.next()) {
-				String nombreAlumno =rs.getString("nombre")+" "+ rs.getString("apellidos");
-				cbSeleccionarAlumno.getItems().add(nombreAlumno);
-				//Recorremos con next mientras haya registros. Guardamos en el String el nombre + apellidos
-				//obtenemos los items y añadimos en el cb de los alumnos
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	
 
-    }
 
-    @FXML
-    void tfNota(ActionEvent event) {
-
-    }
-    public void cargarModulosProfe() {
-    	GestionBD gbd = new GestionBD();
-    	try {
-			ResultSet rs= gbd.modulosProfesor(dniProfesor);
-			while(rs.next()) {
-				cbModulos.getItems().add(rs.getString("denominacion"));
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	
-    }
+   
     private void mostrarAlerta(String titulo, String mensaje, AlertType tipo) {
     	Alert alert = new Alert(tipo);
     	alert.setTitle(titulo);
